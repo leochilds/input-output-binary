@@ -1,12 +1,14 @@
 import { useMemo } from 'react'
 import WaveformCanvas from './WaveformCanvas.jsx'
-import { getDisplaySamples } from '../lib/dsp.js'
+import { getDisplaySamples, peakAmplitude } from '../lib/dsp.js'
 
 export default function AnalogSection({ rawSamples, sampleRate, gainDb, locked }) {
   const displaySamples = useMemo(() => {
     if (!rawSamples) return null
     return getDisplaySamples(rawSamples, 2000)
   }, [rawSamples])
+
+  const peak = useMemo(() => rawSamples ? peakAmplitude(rawSamples) : null, [rawSamples])
 
   const durationSec = rawSamples ? (rawSamples.length / sampleRate).toFixed(2) : '—'
   const totalSamples = rawSamples ? rawSamples.length.toLocaleString() : '—'
@@ -48,12 +50,12 @@ export default function AnalogSection({ rawSamples, sampleRate, gainDb, locked }
         </div>
         <div className="stat">
           <span className="stat-label">PEAK AFTER NORM.</span>
-          <span className="stat-value">±0.95</span>
+          <span className="stat-value">{peak !== null ? `±${peak.toFixed(3)}` : '—'}</span>
         </div>
         {gainDb !== null && (
           <div className="stat">
             <span className="stat-label">GAIN APPLIED</span>
-            <span className="stat-value stat-value-gain">+{gainDb.toFixed(1)} dB</span>
+            <span className="stat-value stat-value-gain">{gainDb > 0 ? '+' : ''}{gainDb.toFixed(1)} dB</span>
           </div>
         )}
       </div>
@@ -67,7 +69,7 @@ export default function AnalogSection({ rawSamples, sampleRate, gainDb, locked }
           <strong>{sampleRate ? `${(sampleRate / 2000).toFixed(1)} kHz` : '?'}</strong> (Nyquist theorem: half the sample rate).
           {gainDb !== null && gainDb > 0 && (
             <> The raw signal was boosted by <strong>+{gainDb.toFixed(1)} dB</strong> ({(10 ** (gainDb / 20)).toFixed(1)}×) to
-            fill the display range — a standard step called <em>peak normalisation</em>.</>
+            fill the display range — a standard step called <em>peak normalization</em>.</>
           )}
         </p>
       </div>
