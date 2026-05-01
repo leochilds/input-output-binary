@@ -622,6 +622,7 @@ input[type="range"].slider-orange::-moz-range-thumb {
 }
 
 .stat-value-orange { color: var(--orange) !important; }
+.stat-value-gain   { color: var(--amber) !important; }
 
 /* ─── Info Callout ───────────────────────────────────── */
 .info-callout {

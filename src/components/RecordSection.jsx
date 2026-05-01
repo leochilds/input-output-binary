@@ -67,9 +67,9 @@ export default function RecordSection({ onRecordingComplete }) {
     setPhase(PHASES.PROCESSING)
     recorderRef.current.stopAnalyser()
     try {
-      const { samples, sampleRate } = await recorderRef.current.stopRecording()
+      const { samples, sampleRate, gainDb } = await recorderRef.current.stopRecording()
       setPhase(PHASES.DONE)
-      onRecordingComplete(samples, sampleRate)
+      onRecordingComplete(samples, sampleRate, gainDb)
     } catch (err) {
       console.error('Recording failed:', err)
       setPhase(PHASES.ERROR)
