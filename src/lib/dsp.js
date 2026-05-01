@@ -7,15 +7,15 @@ export function peakAmplitude(samples) {
   return peak
 }
 
-export function normalise(samples, targetPeak = 0.95) {
+export function normalize(samples, targetPeak = 0.95) {
   const peak = peakAmplitude(samples)
-  if (peak === 0) return { normalised: samples, gainFactor: 1, gainDb: 0 }
+  if (peak === 0) return { normalized: samples, gainFactor: 1, gainDb: 0 }
   const gainFactor = targetPeak / peak
-  const normalised = new Float32Array(samples.length)
+  const normalized = new Float32Array(samples.length)
   for (let i = 0; i < samples.length; i++) {
-    normalised[i] = samples[i] * gainFactor
+    normalized[i] = samples[i] * gainFactor
   }
-  return { normalised, gainFactor, gainDb: 20 * Math.log10(gainFactor) }
+  return { normalized, gainFactor, gainDb: 20 * Math.log10(gainFactor) }
 }
 
 export function quantize(samples, bitDepth) {

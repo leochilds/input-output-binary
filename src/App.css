@@ -723,7 +723,7 @@ input[type="range"].slider-orange::-moz-range-thumb {
   color: var(--text-dim);
 }
 
-.binary-col-binary { /* no extra styles needed */ }
+.binary-col-binary { font-family: var(--font-mono); }
 
 .binary-grid {
   border: 1px solid var(--border-mid);
@@ -833,7 +833,7 @@ input[type="range"].slider-orange::-moz-range-thumb {
   animation: blink-rec 0.8s ease-in-out infinite;
 }
 
-.playback-card-indicator-orange { /* base state same as above */ }
+.playback-card-indicator-orange { width: 6px; height: 6px; border-radius: 50%; background: var(--border-active); }
 .playback-card-processed.playing .playback-card-indicator-orange {
   background: var(--orange);
   box-shadow: 0 0 8px var(--orange);
