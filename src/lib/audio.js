@@ -1,3 +1,5 @@
+import { normalise } from './dsp.js'
+
 export class Recorder {
   constructor() {
     this.stream = null
@@ -72,8 +74,9 @@ export class Recorder {
           const arrayBuffer = await blob.arrayBuffer()
           await this.audioCtx.resume()
           const audioBuffer = await this.audioCtx.decodeAudioData(arrayBuffer)
-          const samples = Float32Array.from(audioBuffer.getChannelData(0))
-          resolve({ samples, sampleRate: audioBuffer.sampleRate })
+          const raw = Float32Array.from(audioBuffer.getChannelData(0))
+          const { normalised: samples, gainDb } = normalise(raw)
+          resolve({ samples, sampleRate: audioBuffer.sampleRate, gainDb })
         } catch (err) {
           reject(err)
         }
