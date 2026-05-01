@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import WaveformCanvas from './WaveformCanvas.jsx'
 import { getDisplaySamples } from '../lib/dsp.js'
 
-export default function AnalogSection({ rawSamples, sampleRate, locked }) {
+export default function AnalogSection({ rawSamples, sampleRate, gainDb, locked }) {
   const displaySamples = useMemo(() => {
     if (!rawSamples) return null
     return getDisplaySamples(rawSamples, 2000)
@@ -47,9 +47,15 @@ export default function AnalogSection({ rawSamples, sampleRate, locked }) {
           <span className="stat-value">{totalSamples}</span>
         </div>
         <div className="stat">
-          <span className="stat-label">AMPLITUDE RANGE</span>
-          <span className="stat-value">−1.0 → +1.0</span>
+          <span className="stat-label">PEAK AFTER NORM.</span>
+          <span className="stat-value">±0.95</span>
         </div>
+        {gainDb !== null && (
+          <div className="stat">
+            <span className="stat-label">GAIN APPLIED</span>
+            <span className="stat-value stat-value-gain">+{gainDb.toFixed(1)} dB</span>
+          </div>
+        )}
       </div>
 
       <div className="info-callout">
@@ -58,8 +64,11 @@ export default function AnalogSection({ rawSamples, sampleRate, locked }) {
           Your browser recorded at <strong>{sampleRate ? `${sampleRate.toLocaleString()} Hz` : '?'}</strong> —
           that's {sampleRate ? sampleRate.toLocaleString() : '?'} measurements every second.
           At this rate, the highest frequency that can be represented is{' '}
-          <strong>{sampleRate ? `${(sampleRate / 2000).toFixed(1)} kHz`  : '?'}</strong> (Nyquist theorem: half the sample rate).
-          Human speech sits between 300 Hz and 3.4 kHz, comfortably within range.
+          <strong>{sampleRate ? `${(sampleRate / 2000).toFixed(1)} kHz` : '?'}</strong> (Nyquist theorem: half the sample rate).
+          {gainDb !== null && gainDb > 0 && (
+            <> The raw signal was boosted by <strong>+{gainDb.toFixed(1)} dB</strong> ({(10 ** (gainDb / 20)).toFixed(1)}×) to
+            fill the display range — a standard step called <em>peak normalisation</em>.</>
+          )}
         </p>
       </div>
     </section>

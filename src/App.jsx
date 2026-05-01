@@ -10,12 +10,14 @@ import PlaybackSection from './components/PlaybackSection.jsx'
 export default function App() {
   const [rawSamples, setRawSamples] = useState(null)
   const [sampleRate, setSampleRate] = useState(44100)
+  const [gainDb, setGainDb] = useState(null)
   const [displayBitDepth, setDisplayBitDepth] = useState(8)
   const [displaySampleRate, setDisplaySampleRate] = useState(null)
 
-  const handleRecordingComplete = (samples, rate) => {
+  const handleRecordingComplete = (samples, rate, db) => {
     setRawSamples(samples)
     setSampleRate(rate)
+    setGainDb(db)
     setDisplaySampleRate(null)
     setTimeout(() => {
       document.getElementById('analog')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -32,7 +34,7 @@ export default function App() {
         <RecordSection onRecordingComplete={handleRecordingComplete} />
 
         <hr className="section-divider" />
-        <AnalogSection rawSamples={rawSamples} sampleRate={sampleRate} locked={locked} />
+        <AnalogSection rawSamples={rawSamples} sampleRate={sampleRate} gainDb={gainDb} locked={locked} />
 
         <hr className="section-divider" />
         <SamplingSection

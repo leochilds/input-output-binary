@@ -1,3 +1,23 @@
+export function peakAmplitude(samples) {
+  let peak = 0
+  for (let i = 0; i < samples.length; i++) {
+    const abs = Math.abs(samples[i])
+    if (abs > peak) peak = abs
+  }
+  return peak
+}
+
+export function normalise(samples, targetPeak = 0.95) {
+  const peak = peakAmplitude(samples)
+  if (peak === 0) return { normalised: samples, gainFactor: 1, gainDb: 0 }
+  const gainFactor = targetPeak / peak
+  const normalised = new Float32Array(samples.length)
+  for (let i = 0; i < samples.length; i++) {
+    normalised[i] = samples[i] * gainFactor
+  }
+  return { normalised, gainFactor, gainDb: 20 * Math.log10(gainFactor) }
+}
+
 export function quantize(samples, bitDepth) {
   const levels = 2 ** bitDepth
   const step = 2 / levels
